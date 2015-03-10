@@ -1,0 +1,17 @@
+body{
+	background-color: #e8e3cb;
+	font-family: Bitstream Vera Sans;
+	color:  #084f53;
+	margin-top: 80px;
+	}
+	
+.bm{
+	width: 300px;
+	height: 90px;
+	font-size: 20px;
+	margin-left: 260px;
+}
+
+a  {
+	color: #084f53;
+}
