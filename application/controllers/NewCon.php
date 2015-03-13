@@ -25,7 +25,6 @@ class NewCon extends CI_Controller {
   {
 		$this->load->view('layout/navbar');
 		$this->load->view('pages/landingpage');
-		//$this->load->view('home');
 	}
 
   public function email()
@@ -90,6 +89,67 @@ class NewCon extends CI_Controller {
        }
       }
 	}
+
+  function test_email()
+  { 
+    $sender_name = "one";           //name of the sender from the contact form
+    $sender_email = "marjonerey@gmail.com";     //email of the sender from the contact form
+    $sender_subject = "Test Email from CI";     //email subject
+    $sender_message = "This is a test Message";   //email message/body
+    $receiver_email = "natzinishawesome@gmail.com"; //admin email as receiver
+    $receiver_name = "natzinishawesome";      //admin name as receiver
+    
+    /* 
+     * Load phpmailer library. library files: ~/application/libraries/phpmailer.php and class.smtp.php
+    */
+     $this->load->library('phpmailer');
+    
+    try {
+      
+      /*
+       * These phpmailer settings for smtp are fixed and highly recommended to use. 
+      */
+      //BEGIN SMTP settings
+      $this->phpmailer->IsSMTP();
+      $this->phpmailer->SMTPDebug   = 1;
+      $this->phpmailer->SMTPAuth   = true;
+      $this->phpmailer->SMTPSecure = 'ssl';
+      $this->phpmailer->Host = 'smtp.gmail.com';
+      $this->phpmailer->Port = 465;
+      //END
+      
+      /*
+       * Change username and password to an active gmail account
+       * If an authentication problem occurs, follow these steps:
+       * 1 - Login to your gmail account using browser web mail portal (https://mail.google.com)
+       * 2 - Then go to https://www.google.com/settings/security/lesssecureapps and make sure to turn on the access by selecting the "turn on" radio option
+       * 3 - Then go to https://accounts.google.com/DisplayUnlockCaptcha click the "Continue" button (assuming you are still logged into your gmail account)
+       * 4 - Test the app again and contact me if you still getting the error. 
+       */
+      $this->phpmailer->Username = 'natzinishawesome@gmail.com';                 
+      $this->phpmailer->Password = 'n477yr0425'; 
+      
+      
+      $this->phpmailer->AddAddress($receiver_email, $receiver_name);
+
+      $this->phpmailer->SetFrom($sender_email, $sender_name);
+
+      $this->phpmailer->Subject  =  $sender_subject;
+
+      $this->phpmailer->Body = $sender_message;
+
+      if(!$this->phpmailer->send()) {
+        echo 'Message could not be sent.';
+        echo 'Mailer Error: ' . $this->phpmailer->ErrorInfo;
+      } else {
+        echo 'Message has been sent';
+      }
+    } catch (phpmailerException $e) {
+      echo $e->errorMessage(); 
+    } catch (Exception $e) {
+      echo $e->getMessage();
+    }
+   }
 
   public function parent_login()
   {
@@ -265,7 +325,7 @@ class NewCon extends CI_Controller {
 		$this->load->view('layout/navbar');
 
 		$this->load->model('Umodel');
-		$data['result'] = $this->Umodel->result_getGrades($studentid); 
+		$data['grades'] = $this->Umodel->result_getGrades($studentid); 
 	   $this->load->view('pages/grades', $data);
     $this->load->view('layout/footer_student');
 

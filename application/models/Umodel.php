@@ -119,12 +119,12 @@ class Umodel extends CI_Model {
 
 					JOIN subjects s ON sb.subjectcode=s.subjectcode
 
-					WHERE g.studentid='2010-F0767'
-					ORDER BY sy,sem
+					WHERE g.studentid='$studentid'
+					ORDER BY sy,sem;
 					";
 			$result = $this->db->query($sql);
-			$result = $result->result();
-			return $result;
+			$grades = $result->result();
+			return $grades;
 	    
 	}
 
@@ -221,23 +221,25 @@ class Umodel extends CI_Model {
 		$sql=
 			"
 			SELECT(
-			(SELECT  sum(s.price) total_tuition FROM subjects s
-			INNER JOIN subjectblocking sb ON s.subjectcode=sb.subjectcode
-			INNER JOIN grades g ON sb.blockcode=g.blockcode
-			WHERE g.studentid='$studentid'
-			AND sb.sem=2) 
-			+
-			(select miscfee from assessment ass
-			JOIN
-			register rg ON ass.regnum=rg.regnum
-			WHERE
-			rg.studentid='$studentid'
-			) 
-			) as total_tuition
+				(SELECT  sum(s.price) total_tuition FROM subjects s
+				INNER JOIN subjectblocking sb ON s.subjectcode=sb.subjectcode
+				INNER JOIN grades g ON sb.blockcode=g.blockcode
+				WHERE g.studentid='$studentid'
+				AND sb.sy=(select max(sy) from subjectblocking sb JOIN grades g ON g.blockcode=sb.blockcode WHERE g.studentid='$studentid')
+				AND sb.sem=(select max(sem) from subjectblocking sb JOIN grades g ON g.blockcode=sb.blockcode WHERE g.studentid='$studentid')
+				)
+				+
+					(select miscfee from assessment ass
+					JOIN register rg ON ass.regnum=rg.regnum
+					WHERE rg.studentid='$studentid'
+						AND sy=(select max(sy) from register rg JOIN grades g ON g.studentid=rg.studentid WHERE g.studentid='$studentid')
+						AND sem=(select max(sem) from register rg JOIN grades g ON g.studentid=rg.studentid WHERE g.studentid='$studentid')
+					)
+				)as total_tuition
 			";
 			$result = $this->db->query($sql);
-			$result = $result->result();
-			return $result;
+			$totalTuition = $result->result();
+			return $totalTuition;
 	}
 
 	function result_totalAssessment($studentid)
@@ -247,8 +249,11 @@ class Umodel extends CI_Model {
 			SELECT sum(s.numofunit) total_units, sum(s.price) total_tuition FROM subjects s
 			INNER JOIN subjectblocking sb ON s.subjectcode=sb.subjectcode
 			INNER JOIN grades g ON sb.blockcode=g.blockcode
-			WHERE g.studentid='$studentid'
-			
+			INNER JOIN register reg ON g.studentid=reg.studentid
+			WHERE g.studentid='2010-F0767'
+			AND sb.sem = (SELECT max(sem) from register WHERE sy = (SELECT max(sy) from register))
+			AND sb.sy = (SELECT max(sy) from register WHERE sem=(SELECT max(sem) from register))
+			;
 			";
 
 			$result = $this->db->query($sql);
@@ -256,65 +261,6 @@ class Umodel extends CI_Model {
 			return $totalAssessment;	
 	}
 
-	function test_email()
-	{ 
-		$sender_name = "one";						//name of the sender from the contact form
-		$sender_email = "marjonerey@gmail.com";			//email of the sender from the contact form
-		$sender_subject = "Test Email from CI";			//email subject
-		$sender_message = "This is a test Message";		//email message/body
-		$receiver_email = "natzinishawesome@gmail.com";	//admin email as receiver
-		$receiver_name = "natzinishawesome";			//admin name as receiver
-		
-		/* 
-		 * Load phpmailer library. library files: ~/application/libraries/phpmailer.php and class.smtp.php
-		*/
-		 $this->load->library('phpmailer');
-		
-		try {
-			
-			/*
-			 * These phpmailer settings for smtp are fixed and highly recommended to use. 
-			*/
-			//BEGIN SMTP settings
-			$this->phpmailer->IsSMTP();
-			$this->phpmailer->SMTPDebug   = 1;
-			$this->phpmailer->SMTPAuth   = true;
-			$this->phpmailer->SMTPSecure = 'ssl';
-			$this->phpmailer->Host = 'smtp.gmail.com';
-			$this->phpmailer->Port = 465;
-			//END
-			
-			/*
-			 * Change username and password to an active gmail account
-			 * If an authentication problem occurs, follow these steps:
-			 * 1 - Login to your gmail account using browser web mail portal (https://mail.google.com)
-			 * 2 - Then go to https://www.google.com/settings/security/lesssecureapps and make sure to turn on the access by selecting the "turn on" radio option
-			 * 3 - Then go to https://accounts.google.com/DisplayUnlockCaptcha click the "Continue" button (assuming you are still logged into your gmail account)
-			 * 4 - Test the app again and contact me if you still getting the error. 
-			 */
-			$this->phpmailer->Username = 'natzinishawesome@gmail.com';                 
-			$this->phpmailer->Password = 'n477yr0425'; 
-			
-			
-			$this->phpmailer->AddAddress($receiver_email, $receiver_name);
-
-			$this->phpmailer->SetFrom($sender_email, $sender_name);
-
-			$this->phpmailer->Subject  =  $sender_subject;
-
-			$this->phpmailer->Body = $sender_message;
-
-			if(!$this->phpmailer->send()) {
-				echo 'Message could not be sent.';
-				echo 'Mailer Error: ' . $this->phpmailer->ErrorInfo;
-			} else {
-				echo 'Message has been sent';
-			}
-		} catch (phpmailerException $e) {
-			echo $e->errorMessage(); 
-		} catch (Exception $e) {
-			echo $e->getMessage();
-		}
-	 }
+	
 	}
 ?>	

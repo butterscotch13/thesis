@@ -4,7 +4,7 @@
     <img src="<?php echo base_url("_assets/img/logo3.png"); ?>">
       <!-- </div> -->
       
-      <p class="header"><a href='<?php print(base_url().'index.php/NewCon/logout') ?>'> Logout</a></p>
+      <p class="header"> | <a href='<?php print(base_url().'index.php/NewCon/logout') ?>'> Logout</a></p>
 
 
   </div>
@@ -19,13 +19,11 @@
       </div>
       <div class="sidebar">
         <ul class="nav">
-          <li class="li2"><a href="<?php print(base_url().'index.php/NewCon/getProfile') ?>"><b>Profile</b></a></li>
-          <li class="li2"><a href="<?php print(base_url().'index.php/NewCon/getGrades') ?>"><b>Grades</b></a></li>
-          <li class="li2"><a href="<?php print(base_url().'index.php/NewCon/getClearance') ?>"><b>Clearance</b></a></li>
-          <li class="li2"><a href="<?php print(base_url().'index.php/NewCon/getInc') ?>"><b>INC Grade Monitor</b></a></li>
-          <li class="li2"><a href="<?php print(base_url().'index.php/NewCon/getSchedule') ?>"><b>Class Schedule</b></a></li>
-          <li class="li2"><a href="<?php print(base_url().'index.php/NewCon/getAssessment') ?>"><b>Assessment of Fees</b></a></li>
-          <li class="li2"><a href="<?php print(base_url().'index.php/NewCon/checkadreq') ?>"><b>Admission Requirements</b></a></li>
+          <li class="li2"><a href="<?php print(base_url().'index.php/NewCon/p_getProfile') ?>"><b>Profile</b></a></li>
+          <li class="li2"><a href="<?php print(base_url().'index.php/NewCon/p_getGrades') ?>"><b>Grades</b></a></li>
+          <li class="li2"><a href="<?php print(base_url().'index.php/NewCon/p_getClearance') ?>"><b>Clearance</b></a></li>
+          <li class="li2"><a href="<?php print(base_url().'index.php/NewCon/email') ?>"><b>Messaging</b></a></li>
+
         </ul>
       </div> 
     </div> <!-- end of col-lg-2 -->

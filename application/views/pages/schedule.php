@@ -36,7 +36,6 @@
                         <h3>CLASS SCHEDULE</h3>
                     </div>
                     <br>
-                   <!-- <button type="button" class="btn btn-default">Print</button>-->
                     <br>
                     <table class="table table-bordered">
                             <tr>
@@ -51,12 +50,12 @@
 
                        
                        <tr>
-                        <!--<td><?php echo $row->blockcode;?></td>-->
                         <td><?php echo $row->subjectcode;?></td>
                         <td><?php echo $row->description;?></td>
 
                         <!--<td><?php echo $row->daystart;?></td>
                         <td><?php echo $row->dayend;?></td>-->
+                        
                         <td><?php echo $row->sday;?></td>
                         <td><?php echo $row->stime;?></td>
                         <td><?php echo $row->roomcode;?>
